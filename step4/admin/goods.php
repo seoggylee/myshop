@@ -19,8 +19,8 @@
         $page = $_GET['page_size'];
     }    
 
-    $count = get_user_count($connect);
-    $list = get_user_list($connect, $page, $page_size);
+    $count = get_goods_count($connect);
+    $list = get_goods_list($connect, $page, $page_size);
 ?>
   <head><script src="../../assets/js/color-modes.js"></script>
 
@@ -266,12 +266,12 @@
         </div>
       </div>
 
-      <h2>회원목록</h2>
+      <h2>상품목록</h2>
       <div class="row">
         <div class="col-lg-10">
     </div>
     <div class="col-lg-2 text-end">
-    <!-- <button type="button" class="btn btn-primary" id="btnAdd">추가</button> -->
+    <button type="button" class="btn btn-primary" id="btnAdd">추가</button>
     </div>
     </div>
       <div class="table-responsive small">
@@ -288,14 +288,14 @@
           <tbody>
             <?php             
             foreach($list as $row){
-                $link = './user_detail.php?mode=view&page='.$page.'&idx='.$row['idx'];
+                $link = './goods_detail.php?mode=view&page='.$page.'&idx='.$row['idx'];
                 ?>
             <tr>
               <td><a href="<?php echo $link ?>"><?php echo $row['idx']; ?></a></td>
               <td><?php echo $row['name']; ?></td>
-              <td><?php echo $row['tel']; ?></td>
-              <td><?php echo $row['grade']; ?></td>
-              <td><?php echo $row['point']; ?></td>
+              <td><?php echo $row['quantity']; ?></td>
+              <td><?php echo $row['price']; ?></td>
+              <td><?php echo $row['company_name']; ?></td>
             </tr>
                 <?php                
             }

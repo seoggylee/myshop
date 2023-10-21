@@ -9,18 +9,7 @@
         header( 'Location: ./login.php' );
     }
 
-    $page = 1;
-    if(!empty($_GET['page'])){
-        $page = $_GET['page'];
-    }
-
-    $page_size = 3;
-    if(!empty($_GET['page_size'])){
-        $page = $_GET['page_size'];
-    }    
-
-    $count = get_user_count($connect);
-    $list = get_user_list($connect, $page, $page_size);
+    
 ?>
   <head><script src="../../assets/js/color-modes.js"></script>
 
@@ -265,37 +254,46 @@
           </button>
         </div>
       </div>
-
-      <h2>회원목록</h2>
+<?php
+      $row = get_order_info($connect, $_GET['idx']);
+      $list = get_order_goods_list($connect, $_GET['idx']);
+?>
+      <h2>주문정보</h2>
       <div class="row">
-        <div class="col-lg-10">
-    </div>
-    <div class="col-lg-2 text-end">
-    <!-- <button type="button" class="btn btn-primary" id="btnAdd">추가</button> -->
-    </div>
-    </div>
-      <div class="table-responsive small">
+        <div class="col-lg-3">주문번호</div>
+        <div class="col-lg-9"><?php echo $row['idx'] ?></div>
+
+        <div class="col-lg-3">주문일자</div>
+        <div class="col-lg-9"><?php echo $row['order_date'] ?></div>
+
+        <div class="col-lg-3">주문금액</div>
+        <div class="col-lg-9"><?php echo $row['total_price'] ?></div>
+
+        <div class="col-lg-3">주문자명</div>
+        <div class="col-lg-9"><?php echo $row['name'] ?></div>
+
+        <div class="col-lg-3">배송정보</div>
+        <div class="col-lg-9"><?php echo $row['addr'] ?></div>
+
+        <div class="col-lg-12">
+          <h3>상품정보</h2>
+          <div class="table-responsive small">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th scope="col">상품번호</th>
-              <th scope="col">상품명</th>
-              <th scope="col">재고량</th>
-              <th scope="col">가격</th>
-              <th scope="col">공급업체명</th>
+              <th scope="col">주문상품</th>
+              <th scope="col">주문수량</th>
+              <th scope="col">주문가격</th>
             </tr>
           </thead>
           <tbody>
             <?php             
             foreach($list as $row){
-                $link = './user_detail.php?mode=view&page='.$page.'&idx='.$row['idx'];
                 ?>
-            <tr>
-              <td><a href="<?php echo $link ?>"><?php echo $row['idx']; ?></a></td>
-              <td><?php echo $row['name']; ?></td>
-              <td><?php echo $row['tel']; ?></td>
-              <td><?php echo $row['grade']; ?></td>
-              <td><?php echo $row['point']; ?></td>
+                            <tr>
+              <td><?php echo $row['NAME']; ?></td>
+              <td><?php echo $row['amount']; ?></td>
+              <td><?php echo $row['order_price']; ?></td>
             </tr>
                 <?php                
             }
@@ -304,42 +302,15 @@
           </tbody>
         </table>
       </div>
-      <div class="row">
-      <div class="col-lg-12">
-      <nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <!-- <li class="page-item"><a class="page-link" href="#">Previous</a></li>     -->
-        <?php
-
-        $total_count = $count;
-        $max_page = ceil($total_count / $page_size);
-
-        for($i = 1 ; $i < $max_page + 1 ; $i++){
-            if( $i == $page ){
-                echo '<li class="page-item"><a class="page-link" href="#">'.$i.'</a></li>';
-            } 
-            else {
-                echo '<li class="page-item"><a class="page-link" href="./goods.php?page='.$i.'">'.$i.'</a></li>';
-            }
-            
-        }
-
-        ?>
-        <!-- <li class="page-item"><a class="page-link" href="#">Next</a></li> -->
-  </ul>
-</nav>
-      </div>
         </div>
+
+      </div>
+      
+      
     </main>
   </div>
 </div>
 <script src="../../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script>
 
-<script type="text/javascript">
-    document.getElementById("btnAdd").addEventListener("click", function(){
-        location.href = './goods_detail.php?mode=add';
-    });
-</script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script></body>
 </html>

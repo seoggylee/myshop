@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-bs-theme="auto">
+<html lang="ko" data-bs-theme="auto">
 <?php
     include '../../db_config.php';
     include './admin.php';
@@ -8,19 +8,6 @@
     if($admin == false){
         header( 'Location: ./login.php' );
     }
-
-    $page = 1;
-    if(!empty($_GET['page'])){
-        $page = $_GET['page'];
-    }
-
-    $page_size = 3;
-    if(!empty($_GET['page_size'])){
-        $page = $_GET['page_size'];
-    }    
-
-    $count = get_user_count($connect);
-    $list = get_user_list($connect, $page, $page_size);
 ?>
   <head><script src="../../assets/js/color-modes.js"></script>
 
@@ -265,81 +252,133 @@
           </button>
         </div>
       </div>
-
-      <h2>회원목록</h2>
+      <form method="POST" action="upload.php" id="profileData" enctype="multipart/form-data">
+      <?php 
+  $company_list = get_company_list($connect, 0, 0);
+  $idx = "";
+  if ( $_GET['mode'] == 'add'){
+?>
+<h2>상품정보</h2>
       <div class="row">
-        <div class="col-lg-10">
-    </div>
-    <div class="col-lg-2 text-end">
-    <!-- <button type="button" class="btn btn-primary" id="btnAdd">추가</button> -->
-    </div>
-    </div>
-      <div class="table-responsive small">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">상품번호</th>
-              <th scope="col">상품명</th>
-              <th scope="col">재고량</th>
-              <th scope="col">가격</th>
-              <th scope="col">공급업체명</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php             
-            foreach($list as $row){
-                $link = './user_detail.php?mode=view&page='.$page.'&idx='.$row['idx'];
-                ?>
-            <tr>
-              <td><a href="<?php echo $link ?>"><?php echo $row['idx']; ?></a></td>
-              <td><?php echo $row['name']; ?></td>
-              <td><?php echo $row['tel']; ?></td>
-              <td><?php echo $row['grade']; ?></td>
-              <td><?php echo $row['point']; ?></td>
-            </tr>
-                <?php                
+      <div class="col-lg-3">썸네일</div>
+        <div class="col-lg-9"><img id="thumbname_img" src='../../img/no_image.jpg' style='width:300px;height:300px;'></div>
+
+        <div class="col-lg-3">상품번호</div>
+        <div class="col-lg-9"></div>
+
+        <div class="col-lg-3">상품명</div>
+        <div class="col-lg-9"><input type="text" class="form-control" name="name" value="" /></div>
+
+        <div class="col-lg-3">재고수량</div>
+        <div class="col-lg-9"><input type="text" class="form-control" name="quantity" value = "" /></div>
+
+        <div class="col-lg-3">상품가격</div>
+        <div class="col-lg-9"><input type="text" class="form-control" name="price" value = "" /></div>
+
+        <div class="col-lg-3">공급업체명</div>
+        <div class="col-lg-9">
+        <select class="form-select" name="company_idx" id="company_idx">
+            <?php 
+            foreach( $company_list as $row ){
+              echo "<option value='".$row["idx"]."'>".$row["company_name"]."</option>";
             }
             ?>
-
-          </tbody>
-        </table>
-      </div>
-      <div class="row">
-      <div class="col-lg-12">
-      <nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <!-- <li class="page-item"><a class="page-link" href="#">Previous</a></li>     -->
-        <?php
-
-        $total_count = $count;
-        $max_page = ceil($total_count / $page_size);
-
-        for($i = 1 ; $i < $max_page + 1 ; $i++){
-            if( $i == $page ){
-                echo '<li class="page-item"><a class="page-link" href="#">'.$i.'</a></li>';
-            } 
-            else {
-                echo '<li class="page-item"><a class="page-link" href="./goods.php?page='.$i.'">'.$i.'</a></li>';
-            }
-            
-        }
-
-        ?>
-        <!-- <li class="page-item"><a class="page-link" href="#">Next</a></li> -->
-  </ul>
-</nav>
-      </div>
+  </select>
         </div>
+      </div>      
+<?php     
+  }
+  else {
+    $idx = $_GET['idx'];
+    $row = get_goods_info($connect, $_GET['idx']);
+    $thumbnail = $row['thumbnail'];
+?>
+  <h2>상품정보</h2>
+      <div class="row">
+      <div class="col-lg-3">썸네일</div>
+        <div class="col-lg-9"><img id="thumbname_img" src='../../img/<?php echo $thumbnail ?>' style='width:300px;height:300px;'></div>
+
+        <div class="col-lg-3">상품번호</div>
+        <div class="col-lg-9"><?php echo $row["idx"] ?></div>
+
+        <div class="col-lg-3">상품명</div>
+        <div class="col-lg-9"><input type="text" class="form-control" name="name" value="<?php echo $row['name'] ?>" /></div>
+
+        <div class="col-lg-3">재고수량</div>
+        <div class="col-lg-9"><input type="text" class="form-control" name="quantity" value = "<?php echo $row['quantity'] ?>" /></div>
+
+        <div class="col-lg-3">상품가격</div>
+        <div class="col-lg-9"><input type="text" class="form-control" name="price" value = "<?php echo $row['price'] ?>" /></div>
+
+        <div class="col-lg-3">공급업체명</div>
+        <div class="col-lg-9">
+        <select class="form-select" name="company_idx" id="company_idx">
+            <?php 
+            foreach( $company_list as $company ){
+              if ($company["idx"] == $row["company_idx"]){
+                echo "<option value='".$company["idx"]."' selected='selected'>".$company["company_name"]."</option>";
+              } else {
+                echo "<option value='".$company["idx"]."'>".$company["company_name"]."</option>";
+              }
+              
+            }
+            ?>
+  </select>
+        </div>
+      </div>      
+<?php
+  }
+?>
+
+
+
+        <input type="hidden" name="idx" value="<?php echo $idx ?>" />
+        <input type="hidden" name="thumbnail" value="" />
+  <div class="form-group">
+    <label for="upfile">Profile Picture</label>
+    <input name="upfile" type="file" class="form-control" id="upfile">
+  </div>
+  <div class="form-group">
+    <button type="button" id="submit" class="btn btn-outline-primary">Submit</button>
+  </div>
+</form>
     </main>
   </div>
 </div>
 <script src="../../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script>
 
-<script type="text/javascript">
-    document.getElementById("btnAdd").addEventListener("click", function(){
-        location.href = './goods_detail.php?mode=add';
-    });
-</script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script>
+  
+    <script type="text/javascript">
+      const button = document.querySelector('#submit');
+
+      button.addEventListener('click', () => {
+        const form = new FormData(document.querySelector('#profileData'));
+        for (let key of form.keys()) {
+          console.log(key);
+        }
+        for (let value of form.values()) {
+          console.log(value);
+        }
+        const url = './upload.php'
+        const request = new Request(url, {
+          method: 'POST',
+          body: form
+        });
+
+        fetch(request)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.status);
+            console.log(data.query);
+            console.log(data.thumbnail); 
+            document.querySelector("#thumbname_img").setAttribute("src", "../../img/"+data.thumbnail);
+            // document.getElementsByName("thumbnail").value = data.thumbnail;
+            // console.log(document.getElementsByName("thumbnail").value);
+            
+          })
+      });
+    </script>
+    
+  </body>
 </html>
