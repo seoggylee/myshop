@@ -266,7 +266,7 @@
         </div>
       </div>
 
-      <h2>회원목록</h2>
+      <h2>업체목록</h2>
       <div class="row">
         <div class="col-lg-10">
     </div>
@@ -317,7 +317,7 @@
                 echo '<li class="page-item"><a class="page-link" href="#">'.$i.'</a></li>';
             } 
             else {
-                echo '<li class="page-item"><a class="page-link" href="./goods.php?page='.$i.'">'.$i.'</a></li>';
+                echo '<li class="page-item"><a class="page-link" href="./company.php?page='.$i.'">'.$i.'</a></li>';
             }
             
         }
@@ -336,7 +336,7 @@
 
 <script type="text/javascript">
     document.getElementById("btnAdd").addEventListener("click", function(){
-        location.href = './goods_detail.php?mode=add';
+        location.href = './company_detail.php?mode=add';
     });
 </script>
 </body>

@@ -314,4 +314,97 @@
 
         return $result;
     }
+
+    function get_board_list($connect, $page, $page_size){
+        if($page_size == 0){
+            $sql = " SELECT a.idx,
+                            board_title,
+                            board_contents,
+                            b.name
+                    FROM tbl_board a,
+                         tbl_admin b
+                    WHERE a.admin_idx = b.idx
+                    ORDER BY a.idx DESC";
+        }
+        else {
+            $sql = "SELECT a.idx,
+                            board_title,
+                            board_contents,
+                            b.name
+                    FROM tbl_board a,
+                        tbl_admin b
+                    WHERE a.admin_idx = b.idx
+                    ORDER BY a.idx DESC
+                    LIMIT ?, ?";
+        }
+
+        $page = $page - 1;
+        $page = $page * $page_size;
+        $stmt = mysqli_prepare($connect, $sql);
+        if($page_size > 0){
+            $stmt->bind_param('ss', $page, $page_size);
+        }
+        
+        // $stmt->bind_result($ias);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result;
+    }
+
+    function get_board_count($connect){
+        $sql = "SELECT count(1) as board_count 
+                FROM   tbl_board a";
+
+        $row = mysqli_fetch_assoc($connect->query($sql));
+
+        return $row['board_count'];
+    }
+
+    function get_board_info($connect, $idx){
+        $sql = "SELECT a.idx,
+                        board_title,
+                        board_contents,
+                        b.name
+                FROM tbl_board a,
+                    tbl_admin b
+                WHERE a.admin_idx = b.idx
+                AND   a.idx = ?";
+
+        $stmt = mysqli_prepare($connect, $sql);
+        $stmt->bind_param('s', $idx);
+        // $stmt->bind_result($ias);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $result = $result->fetch_assoc();
+
+        return $result;
+    }
+
+    function get_admin_idx($connect, $user_id){
+        $sql = "SELECT idx FROM tbl_admin WHERE user_id = ?";
+        $stmt = mysqli_prepare($connect, $sql);
+        $stmt->bind_param('s', $user_id);
+
+        return get_select_one($connect, $stmt);
+        
+    }
+
+    function get_select_one($connect, $stmt){
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $result = $result->fetch_assoc();
+
+        return $result['idx'];
+    }
+
+    function get_last_insert_id($connect){
+        $sql = "select LAST_INSERT_ID() as last_idx";
+        $board_idx = mysqli_fetch_assoc($connect->query($sql));
+        $idx = $board_idx['last_idx'];
+
+        return $idx;
+    }
+
+
 ?>
