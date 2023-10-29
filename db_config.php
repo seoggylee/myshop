@@ -16,6 +16,4 @@
 
     $query = "USE webdev";
     $connect->query($query);
-
-    // include './function.php';
 ?>

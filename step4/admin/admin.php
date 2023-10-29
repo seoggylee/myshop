@@ -7,22 +7,18 @@
         }
         else {
             if($session['admin'] == 'Y'){
-                $admin = true;
-                return $admin;
+                return true;
             }
             else {
                 $admin = false;
             }
         }
-
         if(empty($user_id)){
             $admin = false;
         }
-
         if(empty($passwd)){
             $admin = false;
-        }
-        
+        }        
         $sql = 'select user_id from tbl_admin where user_id = ? and passwd = ?';
         $stmt = mysqli_prepare($connect, $sql);
         $stmt->bind_param('ss', $user_id, $passwd);
@@ -33,7 +29,6 @@
         if($result->num_rows > 0){
             $admin = true;
         }
-
         return $admin;
     }
 
@@ -91,10 +86,9 @@
         $result = $result->fetch_assoc();
 
         return $result;
+    }
 
-      }
-
-      function get_order_goods_list($connect, $idx){
+    function get_order_goods_list($connect, $idx){
         $sql = "SELECT c.NAME, 
                         c.THUMBNAIL,
                         b.amount,
@@ -113,9 +107,9 @@
         $result = $stmt->get_result();
 
         return $result;
-      }
+    }
 
-      function get_goods_count($connect){
+    function get_goods_count($connect){
         $sql = "SELECT count(1) as comment_counter 
                 FROM   tbl_goods a,
                         tbl_company b

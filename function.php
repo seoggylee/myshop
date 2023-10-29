@@ -10,11 +10,16 @@
     }
 
     function get_goods($connect, $idx){
-        $sql = "SELECT a.idx, a.NAME, a.THUMBNAIL, a.quantity, a.price, b.company_name
-        FROM   tbl_goods a, 
-               tbl_company b
-        WHERE  a.company_idx = b.idx
-        AND    a.idx = ".$idx;
+        $sql = "SELECT a.idx, 
+                       a.NAME, 
+                       a.THUMBNAIL, 
+                       a.quantity, 
+                       a.price, 
+                       b.company_name
+                FROM   tbl_goods a, 
+                    tbl_company b
+                WHERE  a.company_idx = b.idx
+                AND    a.idx = ".$idx;
 
         $row = mysqli_fetch_assoc($connect->query($sql));
 
@@ -23,15 +28,12 @@
 
     function get_order($connect, $idx){
         $sql = "SELECT * 
-        FROM tbl_order a,
-             tbl_order_goods b,
-             tbl_goods c
-        WHERE a.idx = b.order_idx
-        AND   b.goods_idx = c.idx
-        AND   a.idx = ".$idx;
-      
-        // echo $sql;
-      
+                FROM tbl_order a,
+                    tbl_order_goods b,
+                    tbl_goods c
+                WHERE a.idx = b.order_idx
+                AND   b.goods_idx = c.idx
+                AND   a.idx = ".$idx;
       
         $result = $connect->query($sql);
 
@@ -40,7 +42,9 @@
 
     function insert_user($connect, $tbl_user){
 
-        $sql = "INSERT INTO tbl_user (user_id, name, birth, passwd, addr, tel) values ('".$tbl_user['user_id']."', '".$tbl_user['name']."', '".$tbl_user['birth']."', '".$tbl_user['passwd']."', '".$tbl_user['addr']."', '".$tbl_user['tel']."')";
+        $sql = "INSERT INTO tbl_user 
+                            (user_id, name, birth, passwd, addr, tel) 
+                values ('".$tbl_user['user_id']."', '".$tbl_user['name']."', '".$tbl_user['birth']."', '".$tbl_user['passwd']."', '".$tbl_user['addr']."', '".$tbl_user['tel']."')";
 
         try{
             if ($connect->query($sql) === TRUE) {
@@ -60,20 +64,20 @@
 
     function check_email($connect, $email){
         // http://localhost/myshop/step3/join_dup_check.php?email=ccc@gmail.com
-        $sql = "SELECT user_id FROM tbl_user WHERE user_id = '".$email."'";
+        $sql = "SELECT user_id 
+                FROM tbl_user 
+                WHERE user_id = '".$email."'";
 
         // echo $sql;
 
         $result = $connect->query($sql);
-
-        // print_r($result);
-        // echo mysqli_num_rows($result);
-
         return mysqli_num_rows($result);
     }
 
     function insert_jjim($connect, $goods_idx, $user_idx){
-        $stmt = mysqli_prepare($connect, 'INSERT INTO tbl_jjim (user_idx, goods_idx) values (?, ?) ON DUPLICATE KEY UPDATE jjim_date = now()');
+        $sql = 'INSERT INTO tbl_jjim (user_idx, goods_idx) 
+                values (?, ?) ON DUPLICATE KEY UPDATE jjim_date = now()';
+        $stmt = mysqli_prepare($connect, $sql);
         mysqli_stmt_bind_param($stmt, 'ss', $user_idx, $goods_idx);
         $stmt->execute();
 
