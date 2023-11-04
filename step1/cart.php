@@ -1,6 +1,5 @@
 <!doctype html>
 <?php
-    session_start();
     include '../db_config.php';
 ?>
 <html lang="en" data-bs-theme="auto">
