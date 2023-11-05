@@ -1,4 +1,4 @@
-   <!doctype html>
+    <!doctype html>
 <?php include '../../db_config.php' ?>
 <?php include './admin.php' ?>
 <?php
@@ -9,9 +9,9 @@
 	$page_size = 5;
 	$page = ($page - 1) * $page_size;	
 	
-	$total_count = get_goods_total_count($connect);
+	$total_count = get_board_total_count($connect);
 	$total_page = ceil($total_count / $page_size);	
-	$list = get_goods_list($connect, $page, $page_size);
+	$list = get_board_list($connect, $page, $page_size);
 	
 ?>
 
@@ -242,7 +242,7 @@
         </div>
       </div>
 
-      <h2>상품목록</h2>
+      <h2>게시판목록</h2>
 	  <div class="row">
         <div class="col-lg-10">
     </div>
@@ -254,11 +254,9 @@
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th scope="col">상품번호</th>
-              <th scope="col">상품명</th>
-              <th scope="col">재고량</th>
-			  <th scope="col">가격</th>
-			  <th scope="col">공급업체명</th>
+              <th scope="col">게시물번호</th>
+              <th scope="col">제목</th>
+              <th scope="col">작성자</th>
             </tr>
           </thead>
           <tbody>
@@ -266,11 +264,9 @@
 	foreach( $list as $row ){
 ?>
             <tr>
-              <td><a href="./goods_detail.php?idx=<?php echo $row['idx'] ?>"><?php echo $row['idx'] ?></a></td>
+              <td><a href="./board_detail.php?idx=<?php echo $row['idx'] ?>"><?php echo $row['idx'] ?></a></td>
+              <td><?php echo $row['board_title'] ?></td>
               <td><?php echo $row['name'] ?></td>
-              <td><?php echo $row['quantity'] ?></td>
-              <td><?php echo $row['price'] ?></td>
-			  <td><?php echo $row['company_name'] ?></td>
             </tr>
 <?php
 	}
@@ -311,7 +307,7 @@
 
 <script type="text/javascript">
     document.getElementById("btnAdd").addEventListener("click", function(){
-        location.href = './goods_detail.php?mode=add';
+        location.href = './board_detail.php?mode=add';
     });
 </script>
 

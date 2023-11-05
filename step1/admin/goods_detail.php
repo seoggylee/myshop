@@ -319,7 +319,8 @@
 					<tr>
 					  <th>상품번호</th>
 					  <td>
-						<input type="hidden" name="idx" id="idx" value="<?php echo $row['idx'] ?>" />					  
+						<input type="hidden" name="idx" id="idx" value="<?php echo $row['idx'] ?>" />		
+<?php echo $row['idx'] ?>						
 					  </td>
 					</tr>
 					<tr>
