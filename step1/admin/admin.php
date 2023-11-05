@@ -64,5 +64,33 @@
 		
 		return $list;
 	}
+	
+	function get_company_total_count($connect){
+		$sql = "SELECT count(1) as comment_counter 
+				FROM   tbl_company b ";
+
+		$row = mysqli_fetch_assoc($connect->query($sql));
+
+		$total_count = $row['comment_counter'];
+		
+		return $total_count;
+	}
+	
+	function get_company_list($connect, $page, $page_size){		
+		$sql = "SELECT idx,
+		               company_name,
+					   tel,
+					   damdang
+				FROM   tbl_company tu
+				LIMIT  ?, ?";
+				
+		$stmt = mysqli_prepare($connect, $sql);
+		$stmt->bind_param('ss', $page, $page_size);
+		// $stmt->bind_result($ias);
+		$stmt->execute();
+		$list = $stmt->get_result();
+		
+		return $list;
+	}
 
 ?>
