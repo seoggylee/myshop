@@ -152,18 +152,26 @@
       </ul>
     </div>
 
-    
+<?php 
+	$loc = "";
+	$referer = $_SERVER['HTTP_REFERER'];
+	if( !empty($_GET['loc']) ) {
+		$loc = $_GET['loc'];
+	}
+?>    
 <main class="form-signin w-100 m-auto">
-  <form>
+  <form action='./login_proc.php' method='post'>
+	<input type="hidden"  name = "loc" id="loc" value="<?php echo $loc ?>">
+	<input type="hidden"  name = "referer" id="referer" value="<?php echo $referer ?>">
     <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
     <div class="form-floating">
-      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <input type="email" class="form-control" id="user_id" name="user_id" placeholder="name@example.com">
       <label for="floatingInput">Email address</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <input type="password" class="form-control" id="passwd" name="passwd" placeholder="Password">
       <label for="floatingPassword">Password</label>
     </div>
 

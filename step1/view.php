@@ -1,6 +1,7 @@
 <!doctype html>
 <?php
     include '../db_config.php';
+	include '../function.php';
 ?>
 <html lang="en" data-bs-theme="auto">
   <head><script src="../assets/js/color-modes.js"></script>
@@ -104,7 +105,6 @@
     <link href="carousel.css" rel="stylesheet">
   </head>
   <body>
-
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
       <symbol id="check2" viewBox="0 0 16 16">
         <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
@@ -160,20 +160,16 @@
 <?php
     include './header.php';
 ?>
-
 <br><br>
 <main>
 
-
+  
 
   <!-- Marketing messaging and featurettes
   ================================================== -->
   <!-- Wrap the rest of the page in another container to center all the content. -->
-  <?php
-    $idx = $_GET['idx'];
-  $sql = "select idx, NAME, THUMBNAIL, quantity, price from tbl_goods WHERE idx = '".$idx."'";
-  $row = mysqli_fetch_assoc($connect->query($sql));
-    $link = "view.php"
+<?php
+  $row = get_goods($connect, $_GET['idx']);
 ?>
   <div class="container marketing">
 
@@ -182,6 +178,7 @@
         <input type="hidden" name="idx" id="idx" value="<?php echo $row['idx'] ?>" />
         <input type="hidden" name='price' id='price' value="<?php echo $row['price'] ?>" />
         <input type="hidden" name='addCart' id='addCart' value="addCart" />
+		<input type="hidden" name="quantity" id="quantity" value="<?php echo $row['quantity'] ?>" />
     <div class="row">
 
       <div class="col-lg-4">
@@ -192,7 +189,7 @@
         <!-- <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p> -->
       </div><!-- /.col-lg-4 -->
       <div class="col-lg-8">
-        <h3><?php echo $row['NAME'] ?></h3>
+        <h3><?php echo $row['NAME'] ?><span class="badge text-bg-info"><a href="#" id="jjim">찜하기</a></span></h3>
         <h2><?php echo number_format($row['price']) ?>원</h2>
 
         <div class="input-group mb-3">
@@ -213,28 +210,41 @@
 
         <button class="btn btn-primary rounded-pill px-3" type="button" id="btnCart">장바구니</button>
       </div>
-      <div class="col-lg-12">상세설명</div>
+      <div class="col-lg-12">상세설명
+		<p>제조 업체 : <?php echo $row['company_name'] ?></p>
+		<p>재고 수량 : <?php echo $row['quantity'] ?></p>
+	  </div>
 
     </div><!-- /.row -->
     </form>
   </div><!-- /.container -->
 
+    <!-- START THE FEATURETTES -->
 
-  <!-- FOOTER -->
-  <?php include './footer.php'; ?>
+    <!-- /END THE FEATURETTES -->
+
+  </div><!-- /.container -->
+
+<?php include './footer.php'; ?>
+
 </main>
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
 <script type="text/javascript">
-     function AddComma(num){
+    function AddComma(num){
         var regexp = /\B(?=(\d{3})+(?!\d))/g;
         return num.toString().replace(regexp, ',');
     }
     document.getElementById("btnplus").addEventListener("click", function(){
         price = parseInt(document.getElementById('price').value, 10);
         amount = parseInt(document.getElementById('amount').value, 10);
+		max_amount = parseInt(document.getElementById('quantity').value, 10);
 
         amount++;
+		if(amount > max_amount){
+			alert('재고수량보다 많은양을 주문할수 없습니다.');
+			return;
+		}
         document.getElementById('amount').value = amount;
         total = amount * price;
         text = AddComma(total) + "원 ("+amount+"개)";
@@ -257,6 +267,26 @@
 
     document.getElementById("btnCart").addEventListener("click", function(){
       document.getElementById("frmCart").submit();
+    });
+	
+	document.getElementById("jjim").addEventListener("click", function(){
+<?php 
+		if (!$login){
+?>
+			alert("회원만 이용이 가능한 기능입니다.");
+			return;
+<?php
+		}
+?>
+      url = './jjim_proc.php?goods_idx='+document.getElementById("idx").value;
+      // alert(url);
+      fetch(url)
+      .then((res) => res.text())
+      .then((data) => {
+          // alert(data);
+		  alert('이 상품을 찜하였습니다.');
+          console.log(data);
+      });
     });
     </script>
     </body>

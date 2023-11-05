@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
-    session_start();
     include '../db_config.php';
+    include '../function.php'
 ?>
 <html lang="en" data-bs-theme="auto">
   <head><script src="../assets/js/color-modes.js"></script>
@@ -164,54 +164,33 @@
 <main>
 
 <?php
-    if(isset($_POST['addCart'])){
-        // echo 'addCart';
-        $item_array = array(
-            'idx' => $_POST["idx"],
-            'amount' => $_POST["amount"]
-        );
-
-        if(!empty($_SESSION["shopping_cart"])){
-            echo 'exist';
-            $item_array_id = array_column($_SESSION["shopping_cart"],"idx");
-            if(!in_array($_POST["idx"], $item_array_id)){
-                $count =  count($_SESSION["shopping_cart"]);
-                $_SESSION["shopping_cart"][$count] = $item_array;
-            }
-        }
-        else{
-            echo 'none';
-            $_SESSION["shopping_cart"][0] = $item_array;
-        }
-    }
-    
-    
+  $result = get_order($connect, $_POST['order_idx']);
 ?>
 <form id="frmOrder" action="order.php">
 <div class="container marketing">
 <h3>주문내역</h3>
 <div class="row">
-    <div class="col-lg-4">상품명</div>
-    <div class="col-lg-4">가격</div>
-    <div class="col-lg-4">수량</div>
+    <div class="col-lg-4 display-6">상품명</div>
+    <div class="col-lg-3 display-6">단가</div>
+    <div class="col-lg-1 display-6">수량</div>
+    <div class="col-lg-4 display-6">가격</div>
 
 <?php
-    if(!empty($_SESSION["shopping_cart"])){
-        foreach($_SESSION["shopping_cart"] as $keys => $values){
-            $idx = $values['idx'];
-            $amount = $values['amount'];
-
-            $sql = "select idx, NAME, THUMBNAIL, quantity, price from tbl_goods WHERE idx = '".$idx."'";
-            $row = mysqli_fetch_assoc($connect->query($sql));
+    $total_price = 0;
+    foreach($result as $row){
 ?>
     <div class="col-lg-4"><?php echo $row['NAME'] ?></div>
-    <div class="col-lg-4"><?php echo $row['price'] ?></div>
-    <div class="col-lg-4"><?php echo $amount ?></div>
+    <div class="col-lg-3 text-end"><?php echo number_format($row['PRICE']) ?>원</div>
+    <div class="col-lg-1 text-end"><?php echo $row['amount'] ?></div>
+    <div class="col-lg-4 text-end"><?php echo number_format($row['amount'] * $row['PRICE']) ?>원</div>
 <?php
-        }
+      $total_price = $total_price + $row['amount'] * $row['PRICE'];
     }
 ?>
-    <h2>주문이 완료되었습니다.</h2>
+
+  <div class="col-lg-8"><h2>결제금액</h2></div>
+  <div class="col-lg-4 text-end"><?php echo number_format($total_price); ?>원</div>
+  <div class="col-lg-12 text-center"><h2>주문이 완료되었습니다.</h2></div>
 </div>
     </div>
 </form>
@@ -221,9 +200,7 @@
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
 <script type="text/javascript">
-    document.getElementById("btnOrder").addEventListener("click", function(){
-      document.getElementById("frmOrder").submit();
-    });
+
     </script>
     </body>
 </html>

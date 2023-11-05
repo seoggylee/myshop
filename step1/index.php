@@ -104,7 +104,6 @@
     <link href="carousel.css" rel="stylesheet">
   </head>
   <body>
-
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
       <symbol id="check2" viewBox="0 0 16 16">
         <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
@@ -173,12 +172,8 @@
       <div class="carousel-item active">
         <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
         <div class="container">
-          
           <div class="carousel-caption">
-          <img src="../img/main001.jpg">
-            <!-- <h1>Example headline.</h1>
-            <p class="opacity-75">Some representative placeholder content for the first slide of the carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p> -->
+            <img src="../img/main001.jpg">
           </div>
         </div>
       </div>
@@ -186,10 +181,7 @@
         <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
         <div class="container">
           <div class="carousel-caption">
-          <img src="../img/main002.jpg">
-            <!-- <h1>Another example headline.</h1>
-            <p>Some representative placeholder content for the second slide of the carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p> -->
+            <img src="../img/main002.jpg">
           </div>
         </div>
       </div>
@@ -198,9 +190,6 @@
         <div class="container">
           <div class="carousel-caption">
             <img src="../img/main003.jpg">
-            <!-- <h1>One more for good measure.</h1>
-            <p>Some representative placeholder content for the third slide of this carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p> -->
           </div>
         </div>
       </div>
@@ -225,9 +214,17 @@
     <!-- Three columns of text below the carousel -->
     <div class="row">
 <?php
-  $sql = 'select idx, NAME, THUMBNAIL, quantity, price from tbl_goods LIMIT 3;';
-  foreach ($connect->query($sql) as $row) {
-    $link = "view.php?idx=".$row['idx']
+	$sql = "select idx, 
+				   NAME, 
+					 THUMBNAIL, 
+					 quantity, 
+					 price 
+			from tbl_goods 
+			ORDER BY idx asc
+			LIMIT 3";
+			
+	foreach ($connect->query($sql) as $row) {
+		$link = "view.php?idx=".$row['idx']
 ?>
       <div class="col-lg-4">
         <a href="<?php echo $link ?>"><img src='../img/<?php echo $row['THUMBNAIL'] ?>' style='width:300px;height:300px;'></a>
@@ -236,15 +233,17 @@
 <?php
   }
 ?>
-
     </div><!-- /.row -->
 
 
+    <!-- START THE FEATURETTES -->
+
+    <!-- /END THE FEATURETTES -->
+
   </div><!-- /.container -->
 
+<?php include './footer.php'; ?>
 
-  <!-- FOOTER -->
-  <?php include './footer.php'; ?>
 </main>
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
