@@ -92,5 +92,36 @@
 		
 		return $list;
 	}
+	
+	function get_goods_total_count($connect){
+		$sql = "SELECT count(1) as comment_counter 
+				FROM   tbl_goods b ";
+
+		$row = mysqli_fetch_assoc($connect->query($sql));
+
+		$total_count = $row['comment_counter'];
+		
+		return $total_count;
+	}
+	
+	function get_goods_list($connect, $page, $page_size){		
+		$sql = "SELECT tu.idx,
+					   tu.name,
+						tu.quantity,
+						tu.price,
+						tc.company_name
+				FROM   tbl_goods tu,
+					   tbl_company tc 
+				WHERE tu.company_idx = tc.idx
+				LIMIT  ?, ?";
+				
+		$stmt = mysqli_prepare($connect, $sql);
+		$stmt->bind_param('ss', $page, $page_size);
+		// $stmt->bind_result($ias);
+		$stmt->execute();
+		$list = $stmt->get_result();
+		
+		return $list;
+	}
 
 ?>
