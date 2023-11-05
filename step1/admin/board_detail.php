@@ -59,9 +59,6 @@
 ?>
 <h2>상품정보</h2>
       <div class="row">
-        <div class="col-lg-3">게시물번호</div>
-        <div class="col-lg-9"></div>
-
         <div class="col-lg-3">타이틀</div>
         <div class="col-lg-9"><input type="text" class="form-control" name="board_title" value="" /></div>
 
@@ -100,7 +97,7 @@
   <h2>게시물정보</h2>
   <div class="row">
         <div class="col-lg-3">게시물번호</div>
-        <div class="col-lg-9"></div>
+        <div class="col-lg-9"><?php echo $row['idx'] ?></div>
 
         <div class="col-lg-3">타이틀</div>
         <div class="col-lg-9"><input type="text" class="form-control" name="board_title" value="<?php echo $row['board_title'] ?>" /></div>

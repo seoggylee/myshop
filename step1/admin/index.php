@@ -1,4 +1,13 @@
 <!doctype html>
+<?php
+	include '../../db_config.php';
+  include './admin.php';
+
+  $admin = is_admin($connect, $_SESSION, null, null);
+  if($admin == false){
+    header( 'Location: ./login.php' );
+  }
+?>
 <html lang="en" data-bs-theme="auto">
   <head><script src="../assets/js/color-modes.js"></script>
 
