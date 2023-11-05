@@ -15,6 +15,10 @@ try {
     $stmt = mysqli_prepare($connect, $sql);
     mysqli_stmt_bind_param($stmt, 'ssss', $company_name, $addr, $tel, $damdang);
     $stmt->execute();
+	
+	$sql = "select LAST_INSERT_ID() as last_idx";
+	$board_idx = mysqli_fetch_assoc($connect->query($sql));
+	$idx = $board_idx['last_idx'];
   } else {
     $idx = $_POST['idx'];
     $company_name = $_POST['company_name'];

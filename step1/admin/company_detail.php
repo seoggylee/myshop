@@ -227,33 +227,89 @@
         </div>
       </div>
 	<?php 
-		$idx = $_GET['idx'];
+		$mode = 'edit';
+		if (!empty($_GET['mode'])){
+			$mode = $_GET['mode'];
+		}
 		
-		$sql = "SELECT idx,
-		               company_name,
-					   addr, 
-					   tel,
-					   damdang
-			FROM   tbl_company tu
-			WHERE  tu.idx = ?";
-			  
-		$stmt = mysqli_prepare($connect, $sql);
-		$stmt->bind_param('s', $idx);
-		// $stmt->bind_result($ias);
-		$stmt->execute();
-		$result = $stmt->get_result();
-        $row = $result->fetch_assoc();
+		
+		
+		if ($mode == 'add'){
+			
+		}
+		else {
+			$idx = $_GET['idx'];
+		
+			$sql = "SELECT idx,
+						   company_name,
+						   addr, 
+						   tel,
+						   damdang
+				FROM   tbl_company tu
+				WHERE  tu.idx = ?";
+				  
+			$stmt = mysqli_prepare($connect, $sql);
+			$stmt->bind_param('s', $idx);
+			// $stmt->bind_result($ias);
+			$stmt->execute();
+			$result = $stmt->get_result();
+			$row = $result->fetch_assoc();
+		}
+		
+		
 		
 	?>
 	  <h2>공급업체정보</h2>
-	  <form method="POST" action="upload.php" id="companyData" enctype="multipart/form-data">
-		<input type="hidden" name="idx" id="idx" value="<?php echo $row['idx'] ?>" />
+	  <form method="POST" action="upload.php" id="companyData">
+		
 		<div class="table-responsive small">
 				<table class="table table-striped table-sm">
 				  <tbody>
-					<tr>
+				  <?php 
+				  
+				  if ($mode == 'add'){
+?>
+
+<tr>
 					  <th>업체번호</th>
-					  <td><?php echo $row['idx'] ?></td>
+					  <td>
+						<input type="hidden" name="idx" id="idx" value="" /></td>
+					</tr>
+					<tr>
+					  <th>업체명</th>
+					  <td>
+						<input type="text" name="company_name" id="company_name" value="" class="form-control" />
+					  
+					  </td>
+					</tr>
+					<tr>
+					  <th>주소</th>
+					  <td>
+						<input type="text" name="addr" id="addr" value="" class="form-control" />
+						</td>
+					</tr>
+					<tr>
+					  <th>전화번호</th>
+					  <td>
+						<input type="text" name="tel" id="tel" value="" class="form-control" />
+						</td>
+					</tr>
+					<tr>
+					  <th>담당자</th>
+					  <td>
+						<input type="text" name="damdang" id="damdang" value="" class="form-control" />
+					</td>
+					</tr>
+					
+<?php
+				  }
+				  else {
+?>
+<tr>
+					  <th>업체번호</th>
+					  <td>
+						<input type="hidden" name="idx" id="idx" value="<?php echo $row['idx'] ?>" />
+						<?php echo $row['idx'] ?></td>
 					</tr>
 					<tr>
 					  <th>업체명</th>
@@ -280,6 +336,11 @@
 						<input type="text" name="damdang" id="damdang" value="<?php echo $row['damdang'] ?>" class="form-control" />
 					</td>
 					</tr>
+<?php
+				  }
+				  
+				  ?>
+					
 				  </tbody>
 				</table>
 			  </div>
@@ -319,6 +380,13 @@
             console.log(data.status);
             console.log(data.query);
             alert("저장되었습니다.");
+<?php 
+	if ($mode == 'add'){
+?>
+			location.href = './company_detail.php?idx=' + data.idx;
+<?php
+	}
+?>
           })
       });
     </script>

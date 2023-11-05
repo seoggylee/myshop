@@ -243,6 +243,13 @@
       </div>
 
       <h2>공급업체목록</h2>
+	  <div class="row">
+        <div class="col-lg-10">
+    </div>
+    <div class="col-lg-2 text-end">
+    <button type="button" class="btn btn-primary" id="btnAdd">추가</button>
+    </div>
+    </div>
       <div class="table-responsive small">
         <table class="table table-striped table-sm">
           <thead>
@@ -299,4 +306,12 @@
 <script src="../../assets/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script></body>
+
+<script type="text/javascript">
+    document.getElementById("btnAdd").addEventListener("click", function(){
+        location.href = './company_detail.php?mode=add';
+    });
+</script>
+
+
 </html>
